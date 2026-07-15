@@ -1,0 +1,194 @@
+[
+  {
+    "article_number": "14",
+    "title": "Equality before law",
+    "part": "Part III - Fundamental Rights",
+    "full_text": "The State shall not deny to any person equality before the law or the equal protection of the laws within the territory of India.",
+    "fundamental_right": "Right to Equality",
+    "constitutional_part": "Part III",
+    "related_articles": ["15", "16", "17", "18"],
+    "clauses": [
+      {
+        "clause_id": "art_14_child_0",
+        "clause": "14",
+        "text": "Equality before law: The State shall not deny to any person equality before the law within the territory of India. This means that all individuals, whether citizens or foreigners, are subject to the same ordinary law of the land, and no one is above the law. It prohibits arbitrary discrimination by the State.",
+        "category": "Equality",
+        "keywords": ["equality before law", "rule of law", "non-arbitrariness", "discrimination"],
+        "legal_topics": ["Equality before Law", "Rule of Law", "Arbitrariness"],
+        "related_cases": ["Kesavananda Bharati v. State of Kerala", "Maneka Gandhi v. Union of India"]
+      },
+      {
+        "clause_id": "art_14_child_1",
+        "clause": "14",
+        "text": "Equal protection of the laws: The State shall not deny to any person the equal protection of the laws within the territory of India. This requires that likes should be treated alike, meaning people under similar circumstances should receive similar legal treatment. Reasonable classification is permitted, but class legislation is prohibited.",
+        "category": "Equality",
+        "keywords": ["equal protection", "reasonable classification", "discrimination", "likes alike"],
+        "legal_topics": ["Equal Protection of the Laws", "Reasonable Classification", "Anti-discrimination"],
+        "related_cases": ["State of West Bengal v. Anwar Ali Sarkar"]
+      }
+    ]
+  },
+  {
+    "article_number": "19",
+    "title": "Protection of certain rights regarding freedom of speech, etc.",
+    "part": "Part III - Fundamental Rights",
+    "full_text": "All citizens shall have the right— (a) to freedom of speech and expression; (b) to assemble peaceably and without arms; (c) to form associations or unions; (d) to move freely throughout the territory of India; (e) to reside and settle in any part of the territory of India; and (g) to practise any profession, or to carry on any occupation, trade or business. (2) Nothing in sub-clause (a) of clause (1) shall affect the operation of any existing law, or prevent the State from making any law, in so far as such law imposes reasonable restrictions on the exercise of the right conferred by the said sub-clause in the interests of the sovereignty and integrity of India, the security of the State, friendly relations with foreign States, public order, decency or morality, or in relation to contempt of court, defamation or incitement to an offence.",
+    "fundamental_right": "Right to Freedom",
+    "constitutional_part": "Part III",
+    "related_articles": ["20", "21", "22"],
+    "clauses": [
+      {
+        "clause_id": "art_19_child_0",
+        "clause": "19(1)(a)",
+        "text": "Freedom of speech and expression: All citizens shall have the right to freedom of speech and expression. This includes the right to express one's views, opinions, beliefs, and convictions freely by word of mouth, writing, printing, picturing, or in any other manner. It also covers freedom of the press, the right to remain silent, and the right to access information.",
+        "category": "Speech",
+        "keywords": ["freedom of speech", "expression", "press freedom", "opinion", "access information"],
+        "legal_topics": ["Freedom of Speech and Expression", "Freedom of the Press", "Right to Information"],
+        "related_cases": ["Shreya Singhal v. Union of India", "Maneka Gandhi v. Union of India"]
+      },
+      {
+        "clause_id": "art_19_child_1",
+        "clause": "19(1)(b)",
+        "text": "Freedom of peaceful assembly: All citizens shall have the right to assemble peaceably and without arms. This includes the right to hold public meetings, demonstrations, and take out processions. It does not include the right to strike, and the assembly must be peaceful and unarmed, subject to reasonable public order restrictions.",
+        "category": "Assembly",
+        "keywords": ["peaceful assembly", "protest", "procession", "public order", "demonstration"],
+        "legal_topics": ["Freedom of Peaceful Assembly", "Right to Protest", "Public Order Restrictions"],
+        "related_cases": ["Babulal Parate v. State of Maharashtra"]
+      },
+      {
+        "clause_id": "art_19_child_2",
+        "clause": "19(1)(c)",
+        "text": "Freedom of association: All citizens shall have the right to form associations, unions, or co-operative societies. This includes the right to form political parties, companies, partnership firms, clubs, organizations, or trade unions. The right also covers the negative right of not joining an association.",
+        "category": "Association",
+        "keywords": ["freedom of association", "unions", "cooperative societies", "political parties", "trade unions"],
+        "legal_topics": ["Freedom of Association", "Trade Union Rights"],
+        "related_cases": ["All India Bank Employees' Association v. National Industrial Tribunal"]
+      },
+      {
+        "clause_id": "art_19_child_3",
+        "clause": "19(2)",
+        "text": "Reasonable restrictions on speech: The State can impose reasonable restrictions on freedom of speech and expression under Article 19(2). These restrictions can only be imposed on specific grounds: the sovereignty and integrity of India, the security of the State, friendly relations with foreign States, public order, decency or morality, contempt of court, defamation, or incitement to an offence.",
+        "category": "Speech Restrictions",
+        "keywords": ["reasonable restrictions", "sovereignty", "public order", "morality", "defamation", "contempt of court", "security of state"],
+        "legal_topics": ["Reasonable Restrictions", "Public Order Exceptions", "Defamation and Free Speech"],
+        "related_cases": ["Shreya Singhal v. Union of India"]
+      }
+    ]
+  },
+  {
+    "article_number": "21",
+    "title": "Protection of life and personal liberty",
+    "part": "Part III - Fundamental Rights",
+    "full_text": "No person shall be deprived of his life or personal liberty except according to procedure established by law.",
+    "fundamental_right": "Right to Life and Personal Liberty",
+    "constitutional_part": "Part III",
+    "related_articles": ["19", "20", "22"],
+    "clauses": [
+      {
+        "clause_id": "art_21_child_0",
+        "clause": "21",
+        "text": "Protection of life and personal liberty: No person shall be deprived of his life or personal liberty except according to procedure established by law. This article is the cornerstone of fundamental rights, ensuring that a person's life and liberty cannot be encroached upon by arbitrary executive actions. The term 'life' is interpreted broadly to mean a life with human dignity, not just animal existence.",
+        "category": "Liberty",
+        "keywords": ["right to life", "personal liberty", "human dignity", "procedure established by law", "due process"],
+        "legal_topics": ["Personal Liberty", "Human Dignity", "Procedure Established by Law"],
+        "related_cases": ["Maneka Gandhi v. Union of India", "Kesavananda Bharati v. State of Kerala"]
+      },
+      {
+        "clause_id": "art_21_child_1",
+        "clause": "21",
+        "text": "Right to privacy under Article 21: The right to privacy is protected as an intrinsic part of the right to life and personal liberty. It protects individual autonomy, informational privacy, spatial privacy (like freedom from unwarranted search and wiretapping), and bodily integrity. Any state intrusion into privacy must be backed by law, have a legitimate aim, and be proportional.",
+        "category": "Privacy",
+        "keywords": ["right to privacy", "surveillance", "informational privacy", "phone search", "wiretapping", "search without warrant"],
+        "legal_topics": ["Right to Privacy", "Spatial Privacy", "Informational Privacy", "Unwarranted Searches"],
+        "related_cases": ["Justice K.S. Puttaswamy v. Union of India"]
+      },
+      {
+        "clause_id": "art_21_child_2",
+        "clause": "21",
+        "text": "Right to a speedy trial under Article 21: The right to a speedy trial is a fundamental right implicit in the guarantee of life and personal liberty. Prolonged pre-trial detention and delay in trial without proper justification violates the right to personal liberty, necessitating bail or quashing of proceedings in extreme cases.",
+        "category": "Due Process",
+        "keywords": ["speedy trial", "pre-trial detention", "bail", "under-trial prisoners", "due process delay"],
+        "legal_topics": ["Right to Speedy Trial", "Bail Jurisprudence", "Pre-trial Incarceration"],
+        "related_cases": ["Union of India v. K.A. Najeeb"]
+      }
+    ]
+  },
+  {
+    "article_number": "22",
+    "title": "Protection against arrest and detention in certain cases",
+    "part": "Part III - Fundamental Rights",
+    "full_text": "No person who is arrested shall be detained in custody without being informed, as soon as may be, of the grounds for such arrest nor shall he be denied the right to consult, and to be defended by, a legal practitioner of his choice. (2) Every person who is arrested and detained in custody shall be produced before the nearest magistrate within a period of twenty-four hours of such arrest...",
+    "fundamental_right": "Protection against Arrest and Detention",
+    "constitutional_part": "Part III",
+    "related_articles": ["21"],
+    "clauses": [
+      {
+        "clause_id": "art_22_child_0",
+        "clause": "22(1)",
+        "text": "Rights of arrested person: No person who is arrested shall be detained in custody without being informed, as soon as may be, of the grounds for such arrest. Additionally, the arrested person cannot be denied the right to consult and be defended by a legal practitioner of their choice.",
+        "category": "Arrest",
+        "keywords": ["arrest", "grounds of arrest", "legal consultation", "defense counsel", "right to lawyer"],
+        "legal_topics": ["Rights of Arrested Persons", "Right to Legal Counsel", "Arrest without Warrant"],
+        "related_cases": ["D.K. Basu v. State of West Bengal"]
+      },
+      {
+        "clause_id": "art_22_child_1",
+        "clause": "22(2)",
+        "text": "Production before magistrate within 24 hours: Every person who is arrested and detained in custody must be produced before the nearest magistrate within a period of twenty-four hours of such arrest, excluding the time necessary for the journey from the place of arrest to the court. No detention is allowed beyond 24 hours without a magistrate's authorization.",
+        "category": "Arrest",
+        "keywords": ["magistrate production", "24 hours", "detention limits", "unlawful detention", "custodial rights"],
+        "legal_topics": ["Production before Magistrate", "Detention Limits", "Arrest Procedures"],
+        "related_cases": ["D.K. Basu v. State of West Bengal"]
+      }
+    ]
+  },
+  {
+    "article_number": "25",
+    "title": "Freedom of conscience and free profession, practice and propagation of religion",
+    "part": "Part III - Fundamental Rights",
+    "full_text": "Subject to public order, morality and health and to the other provisions of this Part, all persons are equally entitled to freedom of conscience and the right freely to profess, practise and propagate religion.",
+    "fundamental_right": "Right to Freedom of Religion",
+    "constitutional_part": "Part III",
+    "related_articles": ["26", "27", "28"],
+    "clauses": [
+      {
+        "clause_id": "art_25_child_0",
+        "clause": "25(1)",
+        "text": "Freedom of religion: Subject to public order, morality, and health, all persons are equally entitled to freedom of conscience and the right freely to profess, practise, and propagate religion. This guarantees the right to perform religious rituals, wear religious symbols, and spread religious tenets, but prohibits forced conversions.",
+        "category": "Religion",
+        "keywords": ["freedom of religion", "conscience", "religious practice", "propagation of religion", "religious symbols", "secularism"],
+        "legal_topics": ["Freedom of Religion", "Religious Practice", "Freedom of Conscience"],
+        "related_cases": ["Bijoe Emmanuel v. State of Kerala", "Kesavananda Bharati v. State of Kerala"]
+      }
+    ]
+  },
+  {
+    "article_number": "32",
+    "title": "Remedies for enforcement of rights conferred by this Part",
+    "part": "Part III - Fundamental Rights",
+    "full_text": "The right to move the Supreme Court by appropriate proceedings for the enforcement of the rights conferred by this Part is guaranteed. (2) The Supreme Court shall have power to issue directions or orders or writs, including writs in the nature of habeas corpus, mandamus, prohibition, quo warranto and certiorari, whichever may be appropriate, for the enforcement of any of the rights...",
+    "fundamental_right": "Right to Constitutional Remedies",
+    "constitutional_part": "Part III",
+    "related_articles": ["226"],
+    "clauses": [
+      {
+        "clause_id": "art_32_child_0",
+        "clause": "32(1)",
+        "text": "Right to constitutional remedies: The right to move the Supreme Court by appropriate proceedings for the enforcement of the Fundamental Rights is guaranteed. Dr. B.R. Ambedkar called Article 32 the 'heart and soul' of the Constitution because a right without a remedy is meaningless.",
+        "category": "Remedies",
+        "keywords": ["constitutional remedies", "supreme court enforcement", "heart and soul", "fundamental rights violation"],
+        "legal_topics": ["Constitutional Remedies", "Right to Move Supreme Court"],
+        "related_cases": ["Kesavananda Bharati v. State of Kerala"]
+      },
+      {
+        "clause_id": "art_32_child_1",
+        "clause": "32(2)",
+        "text": "Power to issue Writs: The Supreme Court has the power to issue directions, orders, or writs, including Habeas Corpus (to release an illegally detained person), Mandamus (to command a public duty), Prohibition (to prevent lower court excess), Quo Warrant (to challenge public office claim), and Certiorari (to quash a lower court order), for the enforcement of Fundamental Rights.",
+        "category": "Remedies",
+        "keywords": ["writs", "habeas corpus", "mandamus", "prohibition", "certiorari", "quo warranto", "judicial review"],
+        "legal_topics": ["Power to Issue Writs", "Judicial Review", "Writ Jurisdiction"],
+        "related_cases": ["D.K. Basu v. State of West Bengal", "Justice K.S. Puttaswamy v. Union of India"]
+      }
+    ]
+  }
+]

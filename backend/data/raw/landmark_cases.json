@@ -1,0 +1,56 @@
+[
+  {
+    "id": "case_puttaswamy_2017",
+    "case_name": "Justice K.S. Puttaswamy v. Union of India",
+    "citation": "AIR 2017 SC 4161",
+    "year": 2017,
+    "articles_cited": ["Article 21", "Article 14", "Article 19"],
+    "ratio": "The right to privacy is protected as an intrinsic part of the right to life and personal liberty under Article 21.",
+    "summary": "A nine-judge bench of the Supreme Court unanimously held that the right to privacy is a fundamental right under the Constitution of India. It forms an intrinsic part of Article 21 (Right to Life and Personal Liberty) and Part III. It ruled that any state invasion of privacy must satisfy a triple test: legality (backed by a clear law), necessity (legitimate state aim), and proportionality (least intrusive means)."
+  },
+  {
+    "id": "case_shreya_singhal_2015",
+    "case_name": "Shreya Singhal v. Union of India",
+    "citation": "AIR 2015 SC 1523",
+    "year": 2015,
+    "articles_cited": ["Article 19(1)(a)", "Article 19(2)"],
+    "ratio": "Section 66A of the Information Technology Act is unconstitutional as it violates freedom of speech under Article 19(1)(a) and is not saved by Article 19(2).",
+    "summary": "The Supreme Court struck down Section 66A of the IT Act, which criminalized sending 'offensive' messages online. The court held that the terms used were vague and overbroad, leading to a chilling effect on free speech. The restrictions did not fall under any of the exceptions listed in Article 19(2), such as public order or decency."
+  },
+  {
+    "id": "case_maneka_gandhi_1978",
+    "case_name": "Maneka Gandhi v. Union of India",
+    "citation": "AIR 1978 SC 597",
+    "year": 1978,
+    "articles_cited": ["Article 21", "Article 14", "Article 19"],
+    "ratio": "Procedure established by law under Article 21 must be just, fair, and reasonable, not arbitrary or oppressive.",
+    "summary": "The petitioner's passport was impounded by the government without giving any reasons. The Supreme Court held that the 'procedure established by law' under Article 21 cannot be arbitrary, unfair, or unreasonable. It introduced the concept of 'due process' into Article 21 and ruled that Articles 14, 19, and 21 are not mutually exclusive but form a golden triangle."
+  },
+  {
+    "id": "case_kesavananda_1973",
+    "case_name": "Kesavananda Bharati v. State of Kerala",
+    "citation": "AIR 1973 SC 1461",
+    "year": 1973,
+    "articles_cited": ["Article 368", "Article 14", "Article 19", "Article 21"],
+    "ratio": "Parliament can amend any part of the Constitution, including Fundamental Rights, but cannot alter or destroy its basic structure.",
+    "summary": "In a 7:6 majority decision, a 13-judge bench established the 'Basic Structure Doctrine'. It held that while Parliament has wide powers to amend the Constitution under Article 368, it cannot amend or destroy the core tenets that define its identity, such as democracy, secularism, federalism, judicial review, and fundamental rights."
+  },
+  {
+    "id": "case_najeeb_2021",
+    "case_name": "Union of India v. K.A. Najeeb",
+    "citation": "AIR 2021 SC 712",
+    "year": 2021,
+    "articles_cited": ["Article 21"],
+    "ratio": "The constitutional court's power to grant bail for violation of Article 21 (speedy trial) overrides statutory restrictions under UAPA.",
+    "summary": "The Supreme Court held that statutory restrictions on granting bail under laws like the Unlawful Activities Prevention Act (UAPA) do not oust the jurisdiction of Constitutional Courts to grant bail where there has been a clear violation of the Right to a Speedy Trial under Article 21. Long-term incarceration without trial is unconstitutional."
+  },
+  {
+    "id": "case_navtej_johar_2018",
+    "case_name": "Navtej Singh Johar v. Union of India",
+    "citation": "AIR 2018 SC 4321",
+    "year": 2018,
+    "articles_cited": ["Article 14", "Article 15", "Article 19", "Article 21"],
+    "ratio": "Section 377 of the IPC, to the extent it criminalizes consensual sexual acts between adults, is unconstitutional as it violates Articles 14, 15, 19, and 21.",
+    "summary": "The Supreme Court decriminalized consensual adult gay sex. The court ruled that Section 377 of the Indian Penal Code violated the rights to equality (Article 14), non-discrimination (Article 15), expression (Article 19), and privacy, dignity, and autonomy (Article 21). It emphasized constitutional morality over popular social morality."
+  }
+]
