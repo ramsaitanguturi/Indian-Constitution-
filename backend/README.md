@@ -77,3 +77,24 @@ Once running, you can access:
 * **Interactive API Documentation (Swagger UI):** `http://localhost:8000/docs`
 * **Health Check Endpoint:** `http://localhost:8000/health`
 * **Search Endpoint:** `POST http://localhost:8000/api/v1/chat/search`
+
+## Production & Render Deployment
+
+This backend is optimized for constrained memory environments like Render Free tier (512MB RAM):
+
+### 1. Memory Optimization Features
+- **Lazy Loading**: The heavy `SentenceTransformer` model weights are NOT loaded during server startup or container probes (e.g. `/health`). They are only loaded on the first query request.
+- **Singleton Client**: ChromaDB `PersistentClient` is initialized as a thread-safe singleton, preventing SQLite connection duplication and memory inflation across multiple threads.
+
+### 2. Tuning Embedding Models (RAM constraints)
+By default, the backend uses `all-MiniLM-L6-v2` (approx. 120MB weights, ~200MB RAM). If your deployment environment still runs into memory limits during query processing:
+1. Open your `.env` file or set the system environment variables:
+   ```env
+   LOCAL_EMBEDDING_MODEL="sentence-transformers/paraphrase-MiniLM-L3-v2"
+   ```
+2. Re-ingest the data to update the vector embeddings using the new model:
+   ```powershell
+   python scripts/ingest_data.py
+   ```
+This lighter model (61MB weights, ~100MB RAM) runs significantly faster and takes about half the memory footprint.
+

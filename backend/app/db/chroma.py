@@ -8,17 +8,21 @@ class ChromaDBManager:
     def __init__(self):
         logger.info(f"Initializing ChromaDB persistent manager at: {settings.CHROMADB_DIR}")
         os.makedirs(settings.CHROMADB_DIR, exist_ok=True)
-        self._local = threading.local()
+        self._client = None
+        self._embedding_function = None
+        self._lock = threading.Lock()
 
     def _get_client_and_embedding(self):
         """
-        Retrieves or creates the thread-local PersistentClient and embedding function.
+        Retrieves or creates the shared PersistentClient and embedding function.
         """
-        if not hasattr(self._local, "client"):
-            logger.info(f"Creating new ChromaDB PersistentClient for thread {threading.get_ident()}")
-            self._local.client = chromadb.PersistentClient(path=settings.CHROMADB_DIR)
-            self._local.embedding_function = self._get_embedding_function()
-        return self._local.client, self._local.embedding_function
+        if self._client is None:
+            with self._lock:
+                if self._client is None:
+                    logger.info("Creating shared ChromaDB PersistentClient (singleton)")
+                    self._client = chromadb.PersistentClient(path=settings.CHROMADB_DIR)
+                    self._embedding_function = self._get_embedding_function()
+        return self._client, self._embedding_function
 
     def _get_embedding_function(self):
         """
@@ -38,13 +42,15 @@ class ChromaDBManager:
                 logger.warning(f"Failed to initialize OpenAI Embeddings: {e}. Falling back to local.")
         
         try:
-            from chromadb.utils import embedding_functions
-            logger.info(f"Attempting to use SentenceTransformer: {settings.LOCAL_EMBEDDING_MODEL}")
-            return embedding_functions.SentenceTransformerEmbeddingFunction(
+            # Try to import sentence_transformers to verify library existence without loading weights
+            import sentence_transformers
+            from app.services.embedding_service import LazySentenceTransformerEmbeddingFunction
+            logger.info(f"Using LazySentenceTransformerEmbeddingFunction with: {settings.LOCAL_EMBEDDING_MODEL}")
+            return LazySentenceTransformerEmbeddingFunction(
                 model_name=settings.LOCAL_EMBEDDING_MODEL
             )
         except Exception as e:
-            logger.warning(f"SentenceTransformers failed to load: {e}. Falling back to built-in ONNX MiniLM.")
+            logger.warning(f"SentenceTransformers library not importable: {e}. Falling back to built-in ONNX MiniLM.")
             from chromadb.utils import embedding_functions
             return embedding_functions.ONNXMiniLM_L6_V2()
 
