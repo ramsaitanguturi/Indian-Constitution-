@@ -59,6 +59,7 @@ def ingest_constitution():
             "article_number": art_num,
             "title": art["title"],
             "part": art["part"],
+            "chapter": art.get("chapter", "") or "",
             "type": "parent",
             "fundamental_right": art.get("fundamental_right", ""),
             "constitutional_part": art.get("constitutional_part", ""),
@@ -78,7 +79,11 @@ def ingest_constitution():
                 "type": "child",
                 "keywords": ",".join(clause.get("keywords", [])),
                 "legal_topics": ",".join(clause.get("legal_topics", [])),
-                "related_cases": ",".join(clause.get("related_cases", []))
+                "related_cases": ",".join(clause.get("related_cases", [])),
+                "title": art["title"],
+                "part": art["part"],
+                "chapter": art.get("chapter", "") or "",
+                "related_articles": ",".join(art.get("related_articles", []))
             })
 
     # Add to ChromaDB
@@ -110,15 +115,29 @@ def ingest_cases():
 
     for case in cases:
         case_ids.append(case["id"])
-        # We index the detailed summary for similarity search
-        case_docs.append(case["summary"])
+        
+        # Build a detailed text representation for similarity search
+        facts = case.get("facts", "")
+        issues = case.get("legal_issue") or case.get("issues", "")
+        judgment = case.get("judgment", "")
+        principle = case.get("legal_principle", "")
+        ratio = case.get("ratio_decidendi") or case.get("ratio", "")
+        keywords_str = ",".join(case.get("keywords", [])) if isinstance(case.get("keywords"), list) else case.get("keywords", "")
+        
+        doc_text = f"Case: {case['case_name']}\nFacts: {facts}\nLegal Issue: {issues}\nJudgment: {judgment}\nLegal Principle: {principle}\nRatio Decidendi: {ratio}\nKeywords: {keywords_str}"
+        case_docs.append(doc_text)
+        
         case_metadatas.append({
             "case_name": case["case_name"],
-            "citation": case["citation"],
+            "citation": case.get("citation", ""),
             "year": case["year"],
+            "court": case.get("court", "Supreme Court of India"),
+            "category": case.get("category", ""),
             # Chroma DB metadata does not support lists directly, so join as comma-separated string
-            "articles_cited": ",".join(case["articles_cited"]),
-            "ratio": case["ratio"]
+            "articles_cited": ",".join(case.get("articles_involved", [])),
+            "ratio": ratio,
+            "legal_principle": principle,
+            "keywords": keywords_str
         })
 
     if case_ids:

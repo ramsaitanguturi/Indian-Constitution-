@@ -25,6 +25,10 @@ class Settings(BaseSettings):
 
     # Google API Key (for Gemini LLM)
     GOOGLE_API_KEY: Optional[str] = None
+    GEMINI_MODEL: str = "gemini-2.5-flash"
+
+    # Production CORS Origins
+    BACKEND_CORS_ORIGINS: list[str] = ["*"]
 
     # App configuration to load from environment
     model_config = SettingsConfigDict(
@@ -34,3 +38,44 @@ class Settings(BaseSettings):
     )
 
 settings = Settings()
+
+def get_llm(temperature: float = 0.2, model_name: str = None):
+    import os
+    # Priority 1: Google API Key
+    google_key = settings.GOOGLE_API_KEY or os.environ.get("GOOGLE_API_KEY")
+    if google_key:
+        from langchain_google_genai import ChatGoogleGenerativeAI
+        target_model = model_name or settings.GEMINI_MODEL or "gemini-2.0-flash"
+        return ChatGoogleGenerativeAI(
+            model=target_model,
+            google_api_key=google_key,
+            temperature=temperature
+        )
+        
+    # Priority 2: OpenRouter API Key as fallback (uses google/gemini-2.5-flash)
+    openrouter_key = os.environ.get("OPENROUTER_API_KEY") or os.environ.get("ANTHROPIC_API_KEY")
+    if openrouter_key:
+        from langchain_openai import ChatOpenAI
+        # OpenRouter requires the full provider-prefixed model ID
+        raw_model = model_name or settings.GEMINI_MODEL or "gemini-2.5-flash"
+        if raw_model.startswith("google/"):
+            target_model = raw_model
+        else:
+            # Map local model name to OpenRouter model slug
+            openrouter_map = {
+                "gemini-2.5-flash": "google/gemini-2.5-flash",
+                "gemini-2.0-flash": "google/gemini-2.5-flash",
+                "gemini-1.5-flash": "google/gemini-3.5-flash",
+            }
+            target_model = openrouter_map.get(raw_model, f"google/{raw_model}")
+            
+        return ChatOpenAI(
+            model=target_model,
+            api_key=openrouter_key,
+            base_url="https://openrouter.ai/api/v1",
+            temperature=temperature,
+            max_tokens=1024
+        )
+        
+    return None
+

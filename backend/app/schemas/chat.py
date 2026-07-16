@@ -28,6 +28,11 @@ class ValidationResponse(BaseModel):
     category: Optional[str] = Field(None, description="Detected legal category")
     issue: Optional[str] = Field(None, description="Detected legal issue description")
 
+class CitationResponse(BaseModel):
+    name: str = Field(..., description="Name of the article or case")
+    year: str = Field(..., description="Year of the article or case")
+    relevance_explanation: str = Field(..., description="Explanation of how it is relevant to the query")
+
 class QueryResponse(BaseModel):
     question: str = Field(..., description="The original query")
     articles: List[ArticleResponse] = Field(default=[], description="List of retrieved relevant constitutional articles")
@@ -36,4 +41,14 @@ class QueryResponse(BaseModel):
     verdict: Optional[str] = Field(None, description="Predicted legal verdict")
     confidence: Optional[str] = Field(None, description="Confidence score or level (e.g. 'High', 'Medium', 'Low')")
     validation_result: Optional[ValidationResponse] = Field(None, description="Validation metrics from the router and validator agents")
+    
+    # Strict response fields
+    issue: Optional[str] = Field(None, description="The core legal issue identified")
+    constitutional_articles: Optional[List[CitationResponse]] = Field(default=[], description="Structured constitutional article citations")
+    case_laws: Optional[List[CitationResponse]] = Field(default=[], description="Structured case law citations")
+    legal_reasoning: Optional[str] = Field(None, description="Detailed legal reasoning")
+    arguments_for: Optional[str] = Field(None, description="Key arguments supporting the user's scenario")
+    arguments_against: Optional[str] = Field(None, description="Key arguments against or supporting the state's position")
+    possible_verdict: Optional[str] = Field(None, description="Predicted possible verdict/outcome")
+
 

@@ -1,5 +1,5 @@
 from typing import Dict, Any
-from app.core.config import settings
+from app.core.config import settings, get_llm
 from app.core.logging import logger
 from app.agents.state import AgentState
 
@@ -7,6 +7,7 @@ def generate_reasoning_local(state: AgentState) -> str:
     """
     Fallback reasoning generator for local/offline execution.
     Creates a high-quality constitutional analysis based on retrieved articles and cases.
+    Identifies a Primary Article and Supporting Articles for multi-article reasoning.
     """
     articles = state.get("retrieved_articles") or []
     cases = state.get("retrieved_cases") or []
@@ -16,34 +17,43 @@ def generate_reasoning_local(state: AgentState) -> str:
     if not articles:
         return "No specific constitutional provisions were retrieved to perform legal analysis."
         
-    best_art = articles[0]
+    primary = articles[0]
+    supporting = articles[1:] if len(articles) > 1 else []
     best_case = cases[0] if cases else None
     
-    art_num = best_art.get("article_number", "")
-    art_title = best_art.get("title", "")
-    clause = best_art.get("clause")
+    art_num = primary.get("article_number", "")
+    art_title = primary.get("title", "")
+    clause = primary.get("clause")
     
     reasoning = (
-        f"Under Indian Constitutional Law, this scenario relates to the category of '{issue}'.\n"
-        f"1. Constitutional Foundation: The issue falls under the scope of Article {art_num} ({art_title})"
+        f"Under Indian Constitutional Law, this scenario relates to the category of '{issue}'.\n\n"
+        f"1. Constitutional Foundation (Primary Article): The primary provision is Article {art_num} ({art_title})"
     )
     if clause:
         reasoning += f", specifically referencing clause/protection '{clause}'"
-    reasoning += f". The text guarantees: '{best_art.get('content', '')}'.\n"
+    reasoning += f". The text guarantees: '{primary.get('content', '')}'.\n"
+    
+    if supporting:
+        reasoning += "\n2. Supporting Constitutional Provisions: "
+        sub_texts = []
+        for art in supporting[:2]:
+            sub_clause_str = f" (Clause {art.get('clause')})" if art.get("clause") else ""
+            sub_texts.append(f"Article {art.get('article_number')} ({art.get('title')}){sub_clause_str} - which states: '{art.get('content', '')}'")
+        reasoning += " Additionally, this is connected to: " + "; and ".join(sub_texts) + ".\n"
     
     if best_case:
         reasoning += (
-            f"2. Judicial Precedent: The landmark Supreme Court case {best_case.get('case_name')} "
+            f"\n3. Judicial Precedent: The landmark Supreme Court case {best_case.get('case_name')} "
             f"({best_case.get('citation')}) is highly relevant. In this case, the court held that: "
-            f"'{best_case.get('summary', '')}'.\n"
-            f"3. Legal Synthesis: The facts of the query ('{query}') present a potential conflict. "
+            f"'{best_case.get('summary', '')}'.\n\n"
+            f"4. Legal Synthesis: The facts of the query ('{query}') present a potential conflict. "
             f"As established in {best_case.get('case_name')}, the state cannot execute arbitrary actions "
-            f"that infringe upon the core rights guaranteed under Article {art_num} unless it satisfies "
+            f"that infringe upon the core rights guaranteed under Article {art_num} or supporting articles unless it satisfies "
             f"established constitutional limitations (such as the proportionality test or reasonable restrictions)."
         )
     else:
         reasoning += (
-            f"2. Legal Synthesis: Any state or government action that infringes upon the core rights guaranteed "
+            f"\n3. Legal Synthesis: Any state or government action that infringes upon the core rights guaranteed "
             f"under Article {art_num} must be justified by law, serve a legitimate state interest, and be proportional."
         )
         
@@ -60,16 +70,26 @@ def reasoning_agent(state: AgentState) -> Dict[str, Any]:
     
     reasoning_chain = None
     
-    if settings.GOOGLE_API_KEY:
+    llm = get_llm(temperature=0.2)
+    if llm:
         try:
-            from langchain_google_genai import ChatGoogleGenerativeAI
             from langchain_core.messages import SystemMessage, HumanMessage
+            import os
             
-            llm = ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash",
-                google_api_key=settings.GOOGLE_API_KEY,
-                temperature=0.2
-            )
+            # Load reasoning prompt from template file
+            PROMPTS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "prompts")
+            prompt_path = os.path.join(PROMPTS_DIR, "reasoning_prompt.txt")
+            if os.path.exists(prompt_path):
+                with open(prompt_path, "r", encoding="utf-8") as f:
+                    system_prompt_template = f.read()
+            else:
+                system_prompt_template = (
+                    "You are an expert Indian Constitutional Law Reasoning Agent.\n"
+                    "Your task is to connect the user's legal scenario with the retrieved constitutional articles and landmark cases.\n"
+                    "Retrieved Articles:\n{articles_str}\n"
+                    "Retrieved Landmark Cases:\n{cases_str}\n"
+                    "User Scenario:\n{query}"
+                )
             
             # Format retrieved materials for the LLM prompt
             articles_str = ""
@@ -80,14 +100,9 @@ def reasoning_agent(state: AgentState) -> Dict[str, Any]:
             for idx, case in enumerate(cases, 1):
                 cases_str += f"[{idx}] {case.get('case_name')} ({case.get('citation')})\nSummary: {case.get('summary')}\n\n"
                 
-            system_prompt = (
-                "You are an expert Constitutional Law Reasoning Agent.\n"
-                "Your task is to connect the user's legal scenario with the retrieved constitutional articles and landmark cases.\n"
-                "Construct a step-by-step legal reasoning chain. Explain the legal connection, the constitutional principles involved, and how the cited cases apply to the scenario.\n"
-                "Rely strictly on the provided retrieved text and do not assume or hallucinate legal facts.\n\n"
-                f"Retrieved Articles:\n{articles_str}\n"
-                f"Retrieved Landmark Cases:\n{cases_str}"
-            )
+            system_prompt = system_prompt_template.replace("{articles_str}", articles_str)
+            system_prompt = system_prompt.replace("{cases_str}", cases_str)
+            system_prompt = system_prompt.replace("{query}", query)
             
             messages = [
                 SystemMessage(content=system_prompt),

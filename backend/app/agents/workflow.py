@@ -44,12 +44,9 @@ workflow.add_conditional_edges(
     }
 )
 
-# Connect the trigger to parallel retrieval nodes
+# Connect the trigger to Constitution Agent, then Case Law Agent, then Reasoning Agent
 workflow.add_edge("retrieval_trigger", "constitution_agent")
-workflow.add_edge("retrieval_trigger", "case_law_agent")
-
-# Connect the parallel nodes to the Reasoning Agent
-workflow.add_edge("constitution_agent", "reasoning_agent")
+workflow.add_edge("constitution_agent", "case_law_agent")
 workflow.add_edge("case_law_agent", "reasoning_agent")
 
 # Connect the rest of the flow sequentially

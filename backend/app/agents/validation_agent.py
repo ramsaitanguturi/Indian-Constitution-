@@ -1,7 +1,7 @@
 import json
 import re
 from typing import Dict, Any
-from app.core.config import settings
+from app.core.config import settings, get_llm
 from app.core.logging import logger
 from app.agents.state import AgentState
 
@@ -44,18 +44,23 @@ def validation_agent(state: AgentState) -> Dict[str, Any]:
     cases = state.get("retrieved_cases") or []
     reasoning = state.get("reasoning_chain") or ""
     
+    # Pre-check: If no articles retrieved, fail immediately with high hallucination risk
+    if not articles:
+        return {
+            "validation_result": {
+                "is_valid": False,
+                "hallucination_risk": "High",
+                "details": "Validation failed: Retrieved articles do not exist.",
+                "action": "stop"
+            }
+        }
+        
     validation_res = None
     
-    if settings.GOOGLE_API_KEY:
+    llm = get_llm(temperature=0.2)
+    if llm:
         try:
-            from langchain_google_genai import ChatGoogleGenerativeAI
             from langchain_core.messages import SystemMessage, HumanMessage
-            
-            llm = ChatGoogleGenerativeAI(
-                model="gemini-2.0-flash",
-                google_api_key=settings.GOOGLE_API_KEY,
-                temperature=0.2
-            )
             
             articles_str = ""
             for idx, art in enumerate(articles, 1):
@@ -67,16 +72,17 @@ def validation_agent(state: AgentState) -> Dict[str, Any]:
                 
             system_prompt = (
                 "You are an expert Constitutional Law Validation Agent.\n"
-                "Review the legal scenario, retrieved articles, retrieved case laws, and the generated reasoning.\n"
-                "Verify:\n"
-                "1. Article Relevance: Do the retrieved articles directly align with the query topic?\n"
-                "2. Case Relevance: Do the retrieved cases support the legal reasoning and facts of the query?\n"
-                "3. Hallucination Risk: Does the reasoning contain any claims, articles, or cases NOT supported by retrieved data?\n\n"
-                "Respond ONLY in JSON format:\n"
+                "Your task is to check the generated reasoning against the retrieved articles and cases.\n\n"
+                "Verify the following three criteria strictly:\n"
+                "1. Retrieved Articles Exist: Are the retrieved articles present and relevant to the query?\n"
+                "2. Retrieved Cases Exist: Are the retrieved cases present and relevant?\n"
+                "3. Reasoning Matches Evidence: Does the reasoning rely ONLY on the retrieved articles and cases? If the reasoning mentions any articles, cases, or facts NOT in the retrieved data, this check fails.\n\n"
+                "Respond ONLY with a valid JSON object of the following format:\n"
                 "{\n"
                 "  \"is_valid\": true or false,\n"
                 "  \"hallucination_risk\": \"Low\", \"Medium\", or \"High\",\n"
-                "  \"details\": \"A concise summary of your verification findings\"\n"
+                "  \"details\": \"A concise summary of the verification findings: (1) retrieved articles exist check result, (2) retrieved cases exist check result, (3) reasoning matches evidence check result.\",\n"
+                "  \"action\": \"proceed\" or \"stop\"\n"
                 "}"
             )
             
@@ -101,6 +107,13 @@ def validation_agent(state: AgentState) -> Dict[str, Any]:
                 content = match.group(0)
                 
             validation_res = json.loads(content)
+            
+            # If is_valid is false, set action to stop
+            if not validation_res.get("is_valid"):
+                validation_res["action"] = "stop"
+            else:
+                validation_res["action"] = "proceed"
+                
             logger.info(f"LLM Validation Result: {validation_res}")
         except Exception as e:
             logger.warning(f"LLM validation agent failed: {e}. Falling back to local validation.")

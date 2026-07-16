@@ -6,13 +6,14 @@ import CaseCard from '../components/CaseCard';
 import VerdictCard from '../components/VerdictCard';
 import ValidationCard from '../components/ValidationCard';
 import ReasoningPanel from '../components/ReasoningPanel';
-import { queryConstitution } from '../services/api';
+import { queryConstitutionStream } from '../services/api';
 import { AlertCircle, RefreshCw, Scale, BookMarked, HelpCircle, Activity } from 'lucide-react';
 
 export default function QueryWorkspace({ preloadedQuery, setPreloadedQuery }) {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState('router');
+  const [streamingStatus, setStreamingStatus] = useState('Initiating legal query...');
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
 
@@ -26,32 +27,36 @@ export default function QueryWorkspace({ preloadedQuery, setPreloadedQuery }) {
     }
   }, [preloadedQuery]);
 
-  // Simulate active agent steps for loading progress
-  useEffect(() => {
-    if (!loading) return;
-
-    const steps = ['router', 'research', 'reasoning', 'validation', 'verdict'];
-    let currentIdx = 0;
-    setLoadingStep(steps[0]);
-
-    const interval = setInterval(() => {
-      if (currentIdx < steps.length - 1) {
-        currentIdx++;
-        setLoadingStep(steps[currentIdx]);
-      }
-    }, 1800); // Shift agent nodes every 1.8s
-
-    return () => clearInterval(interval);
-  }, [loading]);
-
   const handleSearch = async (queryText) => {
     setLoading(true);
     setError(null);
     setResult(null);
     setQuery(queryText);
+    setLoadingStep('router');
+    setStreamingStatus('Router running...');
 
     try {
-      const data = await queryConstitution(queryText);
+      const onProgress = (statusEvent) => {
+        const { node, message } = statusEvent;
+        setStreamingStatus(message);
+        
+        // Map LangGraph node names to timeline steps
+        const nodeMap = {
+          'router': 'router',
+          'constitution_agent': 'research',
+          'case_law_agent': 'research',
+          'reasoning_agent': 'reasoning',
+          'validation_agent': 'validation',
+          'verdict_agent': 'verdict',
+          'verdict': 'verdict'
+        };
+        
+        if (nodeMap[node]) {
+          setLoadingStep(nodeMap[node]);
+        }
+      };
+
+      const data = await queryConstitutionStream(queryText, 5, onProgress);
       setResult(data);
     } catch (err) {
       console.error(err);
@@ -93,10 +98,10 @@ export default function QueryWorkspace({ preloadedQuery, setPreloadedQuery }) {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-300">
-                Orchestrating AI Legal Experts...
+                {streamingStatus}
               </p>
-              <p className="text-[11px] text-slate-500 mt-1 capitalize animate-pulse">
-                Current Active: {loadingStep} Agent
+              <p className="text-[11px] text-slate-500 mt-1 uppercase tracking-widest font-mono">
+                Active Node: {loadingStep} agent
               </p>
             </div>
           </div>

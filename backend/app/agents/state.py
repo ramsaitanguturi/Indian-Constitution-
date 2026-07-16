@@ -11,4 +11,6 @@ class AgentState(TypedDict):
     confidence_score: float
     final_answer: str
     verdict: Optional[str]
+    detected_concepts: Optional[Dict[str, Any]]
+    verdict_data: Optional[Dict[str, Any]]
 

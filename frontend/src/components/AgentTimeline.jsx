@@ -51,11 +51,6 @@ export default function AgentTimeline({ currentStep = 'completed', validationRes
 
   // Helper to get step status index
   const getStepStatus = (stepId) => {
-    if (currentStep === 'loading') {
-      // Simulate active flow for loading states
-      return 'active'; 
-    }
-    
     const statusMap = {
       'router': 0,
       'research': 1,
@@ -64,8 +59,16 @@ export default function AgentTimeline({ currentStep = 'completed', validationRes
       'verdict': 4
     };
 
-    const currentIdx = statusMap[currentStep] ?? 4; // default to all complete if success
+    if (currentStep === 'completed') {
+      return 'completed';
+    }
+
+    const currentIdx = statusMap[currentStep];
     const stepIdx = statusMap[stepId];
+
+    if (currentIdx === undefined) {
+      return 'completed';
+    }
 
     if (stepIdx < currentIdx) return 'completed';
     if (stepIdx === currentIdx) return 'active';
@@ -115,7 +118,7 @@ export default function AgentTimeline({ currentStep = 'completed', validationRes
               <div className={`w-14 h-14 rounded-full flex items-center justify-center border-2 z-10 transition-all duration-500 ${statusBg} ${pulseClass}`}>
                 {status === 'completed' ? (
                   <CheckCircle2 className="w-6 h-6" />
-                ) : status === 'active' && currentStep === 'loading' ? (
+                ) : status === 'active' ? (
                   <Loader2 className="w-6 h-6 animate-spin" />
                 ) : (
                   <Icon className="w-6 h-6" />

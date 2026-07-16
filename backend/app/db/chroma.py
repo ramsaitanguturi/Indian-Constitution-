@@ -1,14 +1,24 @@
 import os
+import threading
 import chromadb
 from app.core.config import settings
 from app.core.logging import logger
 
 class ChromaDBManager:
     def __init__(self):
-        logger.info(f"Initializing ChromaDB persistent client at: {settings.CHROMADB_DIR}")
+        logger.info(f"Initializing ChromaDB persistent manager at: {settings.CHROMADB_DIR}")
         os.makedirs(settings.CHROMADB_DIR, exist_ok=True)
-        self.client = chromadb.PersistentClient(path=settings.CHROMADB_DIR)
-        self.embedding_function = self._get_embedding_function()
+        self._local = threading.local()
+
+    def _get_client_and_embedding(self):
+        """
+        Retrieves or creates the thread-local PersistentClient and embedding function.
+        """
+        if not hasattr(self._local, "client"):
+            logger.info(f"Creating new ChromaDB PersistentClient for thread {threading.get_ident()}")
+            self._local.client = chromadb.PersistentClient(path=settings.CHROMADB_DIR)
+            self._local.embedding_function = self._get_embedding_function()
+        return self._local.client, self._local.embedding_function
 
     def _get_embedding_function(self):
         """
@@ -40,11 +50,12 @@ class ChromaDBManager:
 
     def get_collection(self, name: str):
         """
-        Retrieve or create a collection with the configured embedding function.
+        Retrieve or create a collection with the thread-local client and embedding function.
         """
-        return self.client.get_or_create_collection(
+        client, embedding_fn = self._get_client_and_embedding()
+        return client.get_or_create_collection(
             name=name,
-            embedding_function=self.embedding_function
+            embedding_function=embedding_fn
         )
 
     def get_parents_collection(self):
