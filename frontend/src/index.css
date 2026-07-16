@@ -66,3 +66,65 @@
 .pulse-active-node {
   animation: pulse-indigo 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* Printing styles for legal documents */
+@media print {
+  /* Hide normal layout */
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: Georgia, 'Times New Roman', serif !important;
+  }
+  
+  /* Hide all interactive app elements */
+  header, footer, nav, button, .no-print, .agent-timeline-container, .chat-input-container {
+    display: none !important;
+  }
+
+  /* Show only the printable container */
+  #print-area, .printable-brief {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    background: white !important;
+    color: black !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Reset layout grids for print spacing */
+  .grid {
+    display: block !important;
+  }
+
+  /* Clean headings & legal typography styling */
+  h1, h2, h3, h4, h5, h6 {
+    color: #000000 !important;
+    font-family: 'Cinzel', Georgia, serif !important;
+    page-break-after: avoid;
+  }
+
+  p, li, span, div, strong {
+    color: #111111 !important;
+  }
+
+  /* Legal border boxes instead of dark-mode glassmorphism cards */
+  .glass-panel, .glass-card, .print-legal-section {
+    background: none !important;
+    border: none !important;
+    border-bottom: 1.5px solid #111111 !important;
+    box-shadow: none !important;
+    padding: 12px 0 !important;
+    margin-bottom: 18px !important;
+    page-break-inside: avoid;
+  }
+
+  /* Specific details style */
+  .print-header-details {
+    border-bottom: 3px double #000000 !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 20px !important;
+  }
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import presets from '../data/examples.json';
 import { 
   Scale, 
   Cpu, 
@@ -37,29 +38,6 @@ export default function LandingPage({ setCurrentPage, setPreloadedQuery }) {
       desc: "An autonomous agent fact-checks retrieved sources against the generated answer, flagging hallucination risks and calculating confidence.",
       icon: ShieldAlert,
       color: "text-rose-400 bg-rose-500/10 border-rose-500/20"
-    }
-  ];
-
-  const presets = [
-    {
-      category: "Privacy & Liberty",
-      q: "Can police search my personal mobile phone without a judicial warrant?",
-      badge: "Article 21"
-    },
-    {
-      category: "Freedom of Expression",
-      q: "Can the government ban peaceful protests in public parks?",
-      badge: "Article 19"
-    },
-    {
-      category: "Religious Freedoms",
-      q: "Can state institutions mandate a specific dress code overriding religious observances?",
-      badge: "Article 25"
-    },
-    {
-      category: "Equality & Representation",
-      q: "Does reservation apply to appointments in private joint ventures funded by the state?",
-      badge: "Article 16"
     }
   ];
 
@@ -136,9 +114,14 @@ export default function LandingPage({ setCurrentPage, setPreloadedQuery }) {
                     {item.badge}
                   </span>
                 </div>
-                <p className="text-sm text-slate-300 group-hover:text-slate-100 transition-colors">
+                <h4 className="text-sm text-slate-200 group-hover:text-slate-100 transition-colors font-serif font-medium">
                   "{item.q}"
-                </p>
+                </h4>
+                {item.description && (
+                  <p className="text-xs text-slate-400 group-hover:text-slate-300 transition-colors font-sans font-light leading-relaxed">
+                    {item.description}
+                  </p>
+                )}
               </div>
               
               <div className="mt-4 flex items-center gap-1.5 text-xs text-slate-500 group-hover:text-amber-500 transition-colors font-medium">

@@ -1,0 +1,62 @@
+[
+  {
+    "category": "Privacy",
+    "q": "Can the police search my personal mobile phone without a judicial warrant?",
+    "badge": "Article 21",
+    "description": "Examines warrantless searches of personal digital devices under the fundamental right to privacy."
+  },
+  {
+    "category": "Arrest",
+    "q": "What rights do I have if I am detained by police without being told the charges?",
+    "badge": "Article 22",
+    "description": "Details protection against arbitrary arrest and detention, including the right to know grounds of arrest."
+  },
+  {
+    "category": "Property",
+    "q": "Can the government acquire private agricultural land without paying fair market compensation?",
+    "badge": "Article 300A",
+    "description": "Explores the constitutional right to property and requirements for state acquisition."
+  },
+  {
+    "category": "Reservation",
+    "q": "Does reservation apply to appointments in private joint ventures funded by the state?",
+    "badge": "Article 16",
+    "description": "Checks the boundaries of public employment quotas in entities with mixed state-private funding."
+  },
+  {
+    "category": "Religion",
+    "q": "Can state institutions mandate a specific dress code overriding religious practices?",
+    "badge": "Article 25",
+    "description": "Analyzes the freedom of conscience and free profession, practice, and propagation of religion."
+  },
+  {
+    "category": "Speech",
+    "q": "Can the government ban peaceful protests or assemblies in public parks under Section 144?",
+    "badge": "Article 19",
+    "description": "Evaluates limits on freedom of speech and expression and the right to assemble peaceably."
+  },
+  {
+    "category": "Election",
+    "q": "Does a voter have the fundamental right to know the educational background and assets of candidates?",
+    "badge": "Article 19(1)(a)",
+    "description": "Investigates voter information transparency as an extension of the freedom of expression."
+  },
+  {
+    "category": "Emergency",
+    "q": "Are fundamental rights under Article 21 suspended during a national emergency declaration?",
+    "badge": "Article 359",
+    "description": "Examines emergency suspension of fundamental rights enforcement under constitutional amendments."
+  },
+  {
+    "category": "Education",
+    "q": "Can a minor child claim a fundamental right to free education in a private unassisted school?",
+    "badge": "Article 21A",
+    "description": "Checks the scope of the right to education regarding private educational institutes."
+  },
+  {
+    "category": "Environment",
+    "q": "Does the right to clean drinking water and a pollution-free environment fall under the Right to Life?",
+    "badge": "Article 21",
+    "description": "Connects environmental degradation and public health to the broad interpretation of life."
+  }
+]

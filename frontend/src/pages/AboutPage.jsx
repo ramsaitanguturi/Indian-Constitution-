@@ -8,7 +8,8 @@ import {
   ShieldAlert, 
   Database,
   Terminal,
-  Bookmark
+  Bookmark,
+  Scale
 } from 'lucide-react';
 
 export default function AboutPage() {
