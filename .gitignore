@@ -8,11 +8,13 @@ __pycache__/
 # Environment variables
 .env
 .env.*
+backend/.env
 !.env.example
 
 
 # ChromaDB
 chroma/
+backend/data/chroma/
 *.sqlite3
 
 
