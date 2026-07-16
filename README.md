@@ -8,142 +8,122 @@ Unlike generic chat assistants, Vidhi.AI is built on an **Agentic RAG workflow**
 
 ## 🏛️ System Architecture
 
-Vidhi.AI utilizes a modular, multi-tier architecture to securely intake, preprocess, retrieve, reason, and validate legal queries. The diagram below represents the complete flow of data and execution from the user interface down to storage, retrieval pipelines, and language models:
+Vidhi.AI is structured using a multi-tiered architecture that separates presentation, API routing, stateful multi-agent orchestration, hybrid RAG operations, and persistent vector databases.
+
+### 1. High-Level System Architecture
+This diagram outlines the major layers and standard communication flow of the application:
 
 ```mermaid
 flowchart TD
-    %% User Node
     User([User])
     
-    %% Frontend Subgraph
-    subgraph Frontend ["React Frontend (frontend/src/)"]
-        ChatInput["ChatInput.jsx <br>(Input Handling)"]
-        QueryWorkspace["QueryWorkspace.jsx <br>(Workspace Logic & SSE)"]
-        api_js["api.js <br>(queryConstitutionStream)"]
+    subgraph Frontend ["React Frontend Layer"]
+        UI["Web Interface"]
     end
     
-    %% Backend Subgraph
-    subgraph Backend ["FastAPI Backend (backend/app/)"]
-        chat_endpoint["chat.py <br>(/api/v1/chat/query/stream)"]
-        AgentService["agent_service.py <br>(AgentService Class)"]
+    subgraph Backend ["FastAPI Backend Layer"]
+        API["REST & SSE Endpoint"]
+        Service["Agent Service Broker"]
+        API --> Service
+    end
+    
+    subgraph Workflow ["AI Agent Workflow (LangGraph)"]
+        Orchestration["Stateful Multi-Agent Graph"]
+    end
+    
+    subgraph RAG ["Retrieval Pipeline (RAG)"]
+        Search["Hierarchical Hybrid Search"]
     end
 
-    %% Workflow Subgraph
-    subgraph Workflow ["LangGraph Multi-Agent Workflow (agents/)"]
-        Router["Router Agent <br>(router.py)"]
-        ConstAgent["Constitution Agent <br>(constitution_agent.py)"]
-        CaseAgent["Case Law Agent <br>(case_law_agent.py)"]
-        ReasonAgent["Reasoning Agent <br>(reasoning_agent.py)"]
-        ValidAgent["Validation Agent <br>(validation_agent.py)"]
-        VerdictAgent["Verdict Agent <br>(verdict_agent.py)"]
+    subgraph Data ["Data & AI Core"]
+        DB[(ChromaDB Vector Store)]
+        LLM["Gemini LLM API"]
     end
 
-    %% Retrieval Subgraph
-    subgraph Retrieval ["Retrieval Pipeline (services/)"]
-        Preprocessor["Query Preprocessor <br>(preprocessor.py)"]
-        ConceptDetect["Concept Detection <br>(concept_service.py)"]
-        HybridRetrieval["Hybrid Retrieval <br>(rag_service.py)"]
-        SemanticSearch["Semantic Search <br>(Dense Vector query)"]
-        BM25Search["BM25 Search <br>(Sparse Lexical query)"]
-        RRF["Reciprocal Rank Fusion <br>(RRF ranking)"]
-    end
-
-    %% Storage Subgraph
-    subgraph Storage ["Storage & Data"]
-        ChromaDB[("ChromaDB Client <br>(data/chroma/)")]
-        ColParents[("constitution_parents collection <br>(Parent Articles Metadata)")]
-        ColChildren[("constitution_children collection <br>(Child Clause Embeddings)")]
-        ColCases[("case_laws collection <br>(Landmark SC Judgments)")]
-    end
-
-    %% AI Subgraph
-    subgraph AI ["AI Services & Models"]
-        GeminiLLM["Gemini API <br>(gemini-2.5-flash via LangChain)"]
-        Embeddings["Sentence Transformer <br>(all-MiniLM-L6-v2 embeddings)"]
-    end
-
-    %% Connections - Main Flow
-    User --> ChatInput
-    ChatInput --> QueryWorkspace
-    QueryWorkspace --> api_js
-    api_js -->|HTTP POST Request SSE| chat_endpoint
-    chat_endpoint --> AgentService
-    AgentService -->|Invokes state graph| Router
-    
-    %% Conditional Router flow
-    Router -->|If valid query| ConstAgent
-    Router -->|If off-topic/Non-Legal| VerdictAgent
-    
-    ConstAgent --> CaseAgent
-    CaseAgent --> ReasonAgent
-    ReasonAgent --> ValidAgent
-    ValidAgent --> VerdictAgent
-    VerdictAgent -->|Final Answer / Brief| AgentService
-    AgentService -->|Stream JSON chunks| api_js
-    
-    %% Connections - Retrieval Supporting Logic
-    Router -.->|Preprocess & expand| Preprocessor
-    Router -.->|Detect concepts| ConceptDetect
-    
-    ConstAgent -.->|Retrieve articles| HybridRetrieval
-    CaseAgent -.->|Retrieve cases| HybridRetrieval
-    
-    HybridRetrieval --> SemanticSearch
-    HybridRetrieval --> BM25Search
-    SemanticSearch & BM25Search --> RRF
-    
-    %% Connections - Storage
-    SemanticSearch --> ColChildren
-    BM25Search -.->|In-memory BM25 index| ColChildren
-    HybridRetrieval --> ColParents
-    HybridRetrieval --> ColCases
-    ColChildren & ColParents & ColCases --> ChromaDB
-
-    %% Connections - AI
-    ConceptDetect -.->|Optional extraction| GeminiLLM
-    SemanticSearch -.->|Vector encoding| Embeddings
-    ReasonAgent -.->|Draft arguments| GeminiLLM
-    ValidAgent -.->|Hallucination check| GeminiLLM
-    VerdictAgent -.->|Formulate outcome| GeminiLLM
+    User --> UI
+    UI -->|HTTP Streams| API
+    Service -->|Executes Workflow| Orchestration
+    Orchestration -->|Queries Context| Search
+    Search -->|Fetches Documents| DB
+    Orchestration -.->|Generates Reasoning| LLM
 ```
 
-### Architectural Layers
-
-- **Presentation Layer (React Frontend)**: Processes user queries via `ChatInput.jsx`. The page `QueryWorkspace.jsx` coordinates query state, renders the streaming execution steps on `AgentTimeline.jsx`, and fetches data via `api.js` using Server-Sent Events (SSE) stream readers.
-- **API Service Layer (FastAPI Backend)**: Defines the core communication endpoints in `endpoints/chat.py`. The `AgentService` class acts as the bridge that sets up the `AgentState` context, triggers the state graph, and captures graph stream updates.
-- **State Orchestration Layer (LangGraph Workflow)**: Compiles and runs a directed acyclic graph defining node transitions. If a query is found to be off-topic, the graph dynamically routes around retrieval components directly to final formatting.
-- **Legal Intelligence & Retrieval Layer**: Sanitizes inputs and matches legal concepts against predefined rules using `concept_service.py` and `preprocessor.py`. The modular `rag_service.py` runs semantic search (using Chroma vector scores) and keyword search (via an in-memory BM25 index), fusing the resulting ranks using Reciprocal Rank Fusion (RRF) and boosting matching concepts before fetching structural parent articles.
-- **Storage & Vector Data Layer**: Maintains persistent collections in ChromaDB. Granular child text segments are stored in the children collection, while structural legal hierarchies live in the parent collection, and historic precedents live in the case laws collection.
-- **AI Core (LLM & Embeddings)**: Encodes text queries into dense vector coordinates using lazy-loaded sentence-transformer models (`all-MiniLM-L6-v2`). Synthesizes deep legal reasoning, validates structural factual consistency to counter hallucinations, and structures the final response report using the `gemini-2.5-flash` model.
+- **Frontend Layer**: A React dashboard that streams updates from the backend using Server-Sent Events (SSE).
+- **Backend Layer**: A FastAPI server that exposes REST interfaces, initializes the execution state, and manages the execution flow.
+- **Workflow Layer**: LangGraph state machine orchestrating custom agent nodes that collaborate on legal queries.
+- **RAG Retrieval Layer**: Standardizes and runs multi-strategy search queries across the vector store.
+- **Data & AI Layer**: Local ChromaDB instance containing statutory and case databases coupled with the Gemini API.
 
 ---
 
-## ⚖️ Agent Execution Flow
-
-The legal analysis state graph coordinates state modifications and routes queries along the following paths depending on relevance:
+### 2. Multi-Agent Execution Flow
+This diagram details the exact order of custom LangGraph agents running within the workflow:
 
 ```mermaid
 flowchart LR
-    UserQuery([User Query]) --> Router["Router Agent <br>(router.py)"]
+    UserQuery([User Query]) --> Router["Router Agent"]
     
-    Router -->|Non-Legal / Off-Topic| Verdict["Verdict Agent <br>(verdict_agent.py)"]
-    Router -->|Proceed Route| Const["Constitution Agent <br>(constitution_agent.py)"]
+    Router -->|Proceed Route| Const["Constitution Agent"]
+    Const --> Case["Case Law Agent"]
+    Case --> Reason["Reasoning Agent"]
+    Reason --> Valid["Validation Agent"]
+    Valid --> Verdict["Verdict Agent"]
     
-    Const --> Case["Case Law Agent <br>(case_law_agent.py)"]
-    Case --> Reason["Reasoning Agent <br>(reasoning_agent.py)"]
-    Reason --> Valid["Validation Agent <br>(validation_agent.py)"]
-    Valid --> Verdict
+    Router -->|Non-Legal / Stop Route| Verdict
     
-    Verdict --> FinalAnswer([Final Response])
+    Verdict --> FinalResponse([Final Legal Response])
 ```
 
-### Workflow Node Functions
-1. **Router Agent**: Extracts query categories, normalizes legal issues, and validates query subject relevance (bypasses retrieval if off-topic).
-2. **Constitution Agent**: Retrieves the top relevant constitutional clauses from ChromaDB.
-3. **Case Law Agent**: Gathers landmark Supreme Court precedents relevant to the query and retrieved articles.
-4. **Reasoning Agent**: Integrates retrieved laws and precedents using Gemini to synthesize legal arguments (For & Against).
-5. **Validation Agent**: Compares generated reasoning directly against raw database sources to prevent hallucinations.
-6. **Verdict Agent**: Predicts a potential legal outcome, determines a confidence score, and compiles the final Markdown brief.
+- **Router Agent**: Evaluates if the query relates to Indian Constitutional Law. If off-topic, it bypasses the pipeline directly to the verdict node.
+- **Constitution Agent**: Queries ChromaDB for fundamental constitutional provisions.
+- **Case Law Agent**: Gathers landmark Supreme Court rulings that cite or connect to the retrieved articles.
+- **Reasoning Agent**: Integrates query parameters, retrieved provisions, and case law summaries to generate legal arguments using the Gemini API.
+- **Validation Agent**: Audits the reasoning chain directly against the retrieved laws to protect against LLM hallucinations.
+- **Verdict Agent**: Predicts outcomes, calculates confidence scores, and formats the final legal report.
+
+---
+
+### 3. RAG Pipeline Architecture
+This diagram outlines the internals of the search, retrieval, and document reconstruction pipeline:
+
+```mermaid
+flowchart TD
+    Query([User Query]) --> Preprocessor["Query Preprocessor"]
+    
+    Preprocessor --> Hybrid["Hybrid Retrieval Layer"]
+    
+    subgraph DualSearch ["Dual-Search Strategy"]
+        Semantic["Semantic Search <br>(all-MiniLM-L6-v2 vectors)"]
+        BM25["BM25 Keyword Search <br>(In-memory index)"]
+    end
+    
+    Hybrid --> Semantic
+    Hybrid --> BM25
+    
+    Semantic & BM25 --> RRF["Reciprocal Rank Fusion (RRF)"]
+    
+    RRF --> ParentReconstruct["Parent Document Reconstruction"]
+    
+    subgraph ChromaCollections ["ChromaDB Collections"]
+        ColParents[("constitution_parents")]
+        ColChildren[("constitution_children")]
+        ColCases[("case_laws")]
+    end
+    
+    Semantic --> ColChildren
+    BM25 -.-> ColChildren
+    ParentReconstruct --> ColParents
+    RRF --> ColCases
+    
+    ColParents & ColChildren & ColCases --> Context([Retrieved Context])
+    Context --> Agents["AI Reasoning Agents"]
+```
+
+- **Query Preprocessor**: Cleans the user input, extracts key legal tags, and expands the query with related synonyms.
+- **Dual-Search Strategy**: Executes parallel dense semantic search using local SentenceTransformer embeddings and sparse lexical search using an in-memory BM25 index built dynamically on startup.
+- **Reciprocal Rank Fusion (RRF)**: Merges rank positions of lexical and vector results to compute a unified relevancy score.
+- **Parent Document Reconstruction**: Retrieves child chunks of constitutional provisions to ensure high-granularity matches, then maps them back to their parent articles in the database to restore full legal context.
+- **ChromaDB Collections**: Houses segmented databases including parent articles, child clauses, and landmark court case summaries.
 
 ---
 
