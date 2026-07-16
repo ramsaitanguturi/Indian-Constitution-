@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 import json
+from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.core.logging import setup_logging
 from app.api.v1.router import api_router
@@ -13,11 +14,47 @@ from app.core.logging import logger
 # Setup logging on startup
 setup_logging()
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    On application startup, check if ChromaDB is empty and automatically run
+    the ingestion pipeline to populate collections if needed.
+    """
+    try:
+        parents_col = db_manager.get_parents_collection()
+        children_col = db_manager.get_children_collection()
+        cases_col = db_manager.get_cases_collection()
+        
+        parents_count = parents_col.count()
+        children_count = children_col.count()
+        cases_count = cases_col.count()
+        
+        if parents_count == 0 and children_count == 0 and cases_count == 0:
+            logger.info("Empty database detected, running ingestion")
+            # Dynamically import scripts.ingest_data to optimize memory footprint
+            from scripts.ingest_data import ingest_constitution, ingest_cases
+            ingest_constitution()
+            ingest_cases()
+            logger.info("Ingestion completed successfully during startup!")
+            
+            # Close client to flush HNSW index to disk, then reset singleton
+            if db_manager._client:
+                logger.info("Flushing database changes to disk...")
+                db_manager._client.close()
+                db_manager._client = None
+                db_manager._embedding_function = None
+        else:
+            logger.info("Existing ChromaDB found, skipping ingestion")
+    except Exception as e:
+        logger.error(f"Error during database initialization check: {e}", exc_info=True)
+    yield
+
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description="Backend API for the Constitution RAG Agent, delivering constitutional analysis and verdict predictions.",
     version="1.0.0",
-    openapi_url=f"{settings.API_V1_STR}/openapi.json"
+    openapi_url=f"{settings.API_V1_STR}/openapi.json",
+    lifespan=lifespan
 )
 
 # Parse CORS Origins configuration

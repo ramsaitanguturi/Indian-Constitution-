@@ -150,6 +150,9 @@ def main():
         ingest_constitution()
         ingest_cases()
         logger.info("Ingestion completed successfully!")
+        if db_manager._client:
+            logger.info("Closing database client to flush changes to disk...")
+            db_manager._client.close()
     except Exception as e:
         logger.exception(f"An error occurred during ingestion: {e}")
         sys.exit(1)
