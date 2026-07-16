@@ -1,6 +1,6 @@
-# Local Execution & Orchestration Guide for Vidhi.AI Constitution Legal Assistant
+# Local Execution & Orchestration Guide for ConstituAI Constitution Legal Assistant
 
-This guide explains how to run, configure, and orchestrate the **Vidhi.AI Constitution Legal Assistant** locally on your machine. This project is configured to run exclusively in local environments.
+This guide explains how to run, configure, and orchestrate the **ConstituAI Constitution Legal Assistant** locally on your machine. This project is configured to run exclusively in local environments.
 
 ---
 

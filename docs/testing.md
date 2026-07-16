@@ -1,6 +1,6 @@
-# Vidhi.AI - Testing & Validation Framework
+# ConstituAI - Testing & Validation Framework
 
-This document outlines the testing, benchmarking, and validation suites for the Vidhi.AI Constitution Legal Assistant. It covers backend intelligence tests, LLM reasoning evaluations, coverage benchmarks, and frontend verification.
+This document outlines the testing, benchmarking, and validation suites for the ConstituAI Constitution Legal Assistant. It covers backend intelligence tests, LLM reasoning evaluations, coverage benchmarks, and frontend verification.
 
 ---
 

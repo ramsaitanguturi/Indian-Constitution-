@@ -64,7 +64,7 @@ export default function LandingPage({ setCurrentPage, setPreloadedQuery }) {
         </h1>
 
         <p className="text-base md:text-lg text-slate-400 font-light leading-relaxed max-w-2xl mx-auto">
-          Vidhi.AI parses real-world legal problems, identifies fundamental rights implications, references landmark Supreme Court decisions, and outlines logical verdicts.
+          ConstituAI parses real-world legal problems, identifies fundamental rights implications, references landmark Supreme Court decisions, and outlines logical verdicts.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
@@ -140,7 +140,7 @@ export default function LandingPage({ setCurrentPage, setPreloadedQuery }) {
             Engineered for Precision, Not Chat
           </h2>
           <p className="text-sm text-slate-500 mt-2 max-w-lg mx-auto">
-            Legal research demands factual consistency. Vidhi.AI replaces generic chat loops with specialized pipeline nodes.
+            Legal research demands factual consistency. ConstituAI replaces generic chat loops with specialized pipeline nodes.
           </p>
         </div>
 

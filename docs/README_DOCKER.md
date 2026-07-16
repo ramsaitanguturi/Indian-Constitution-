@@ -1,6 +1,6 @@
-# Vidhi.AI - Local Docker Orchestration Guide (Optional)
+# ConstituAI - Local Docker Orchestration Guide (Optional)
 
-This document describes how to build, run, and verify the local containerized stack of the multi-agent Constitution RAG assistant (**Vidhi.AI**) using Docker and Docker Compose.
+This document describes how to build, run, and verify the local containerized stack of the multi-agent Constitution RAG assistant (**ConstituAI**) using Docker and Docker Compose.
 
 ---
 
@@ -37,7 +37,7 @@ docker compose up -d --build
 
 This will:
 - Build the FastAPI backend image and start it on port `8000`.
-- Mount a persistent volume named `vidhi_chroma_data` to store the indexed database.
+- Mount a persistent volume named `constituai_chroma_data` to store the indexed database.
 - Build the React frontend with Vite, compile assets, configure custom Nginx fallbacks, and serve the application on port `80`.
 
 ### 2. Verify Running Containers

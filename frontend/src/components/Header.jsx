@@ -22,7 +22,7 @@ export default function Header({ currentPage, setCurrentPage, backendHealthy }) 
           </div>
           <div>
             <span className="text-lg font-serif font-bold tracking-wide text-slate-100 uppercase">
-              Vidhi<span className="text-amber-500">.AI</span>
+              Constitu<span className="text-amber-500">AI</span>
             </span>
             <span className="block text-[9px] uppercase tracking-widest text-slate-500 font-sans leading-none">
               Constitution RAG Assistant

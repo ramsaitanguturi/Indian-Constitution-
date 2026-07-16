@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="flex items-start gap-2.5 text-left p-3.5 rounded-lg bg-rose-950/15 border border-rose-950/30 max-w-2xl mx-auto">
           <ShieldAlert className="w-4 h-4 text-rose-500/70 shrink-0 mt-0.5" />
           <p className="text-slate-500 leading-normal text-[11px]">
-            <strong>Legal Notice & Disclaimer:</strong> Vidhi.AI is an AI-powered legal assistant designed for research and educational purposes only. The verdict predictions and analyses do not constitute binding legal counsel or judicial opinions. Users must consult qualified legal practitioners for statutory case advisories.
+            <strong>Legal Notice & Disclaimer:</strong> ConstituAI is an AI-powered legal assistant designed for research and educational purposes only. The verdict predictions and analyses do not constitute binding legal counsel or judicial opinions. Users must consult qualified legal practitioners for statutory case advisories.
           </p>
         </div>
 
@@ -24,7 +24,7 @@ export default function Footer() {
         </div>
 
         <p className="text-slate-700">
-          © {new Date().getFullYear()} Vidhi.AI. Licensed under MIT patterns.
+          © {new Date().getFullYear()} ConstituAI. Licensed under MIT patterns.
         </p>
       </div>
     </footer>

@@ -1,14 +1,14 @@
-# Vidhi.AI - Constitutional RAG Assistant
+# ConstituAI - Constitutional RAG Assistant
 
-Vidhi.AI is a state-of-the-art, AI-powered legal assistant designed to systematically analyze real-world scenarios under Indian Constitutional Law. It maps complex legal disputes directly to constitutional articles, relevant clauses, fundamental rights, landmark Supreme Court judgments, and structured legal reasoning to generate objective verdicts.
+ConstituAI is a state-of-the-art, AI-powered legal assistant designed to systematically analyze real-world scenarios under Indian Constitutional Law. It maps complex legal disputes directly to constitutional articles, relevant clauses, fundamental rights, landmark Supreme Court judgments, and structured legal reasoning to generate objective verdicts.
 
-Unlike generic chat assistants, Vidhi.AI is built on an **Agentic RAG workflow** utilizing **LangGraph state orchestration**, **hierarchical parent-child document chunking**, and a dedicated **Validator agent guardrail** to eliminate hallucinations and secure high precision.
+Unlike generic chat assistants, ConstituAI is built on an **Agentic RAG workflow** utilizing **LangGraph state orchestration**, **hierarchical parent-child document chunking**, and a dedicated **Validator agent guardrail** to eliminate hallucinations and secure high precision.
 
 ---
 
 ## 🏛️ System Architecture
 
-Vidhi.AI is structured using a multi-tiered architecture that separates presentation, API routing, stateful multi-agent orchestration, hybrid RAG operations, and persistent vector databases.
+ConstituAI is structured using a multi-tiered architecture that separates presentation, API routing, stateful multi-agent orchestration, hybrid RAG operations, and persistent vector databases.
 
 ### 1. High-Level System Architecture
 This diagram outlines the major layers and standard communication flow of the application:
@@ -266,7 +266,7 @@ The frontend web application will run locally on `http://localhost:5173`.
 
 ## 📝 Demo Query Examples
 
-Try pasting these example scenarios into the web application to see Vidhi.AI's reasoning in action:
+Try pasting these example scenarios into the web application to see ConstituAI's reasoning in action:
 
 - **Privacy & Arrest:** *"Can the police search my personal mobile phone without a warrant during a routine check?"*
 - **Freedom of Expression:** *"Can the government ban a peaceful student assembly protesting against a new local policy?"*

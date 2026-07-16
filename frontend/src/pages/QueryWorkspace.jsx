@@ -277,11 +277,11 @@ export default function QueryWorkspace({ preloadedQuery, setPreloadedQuery }) {
               <div className="print-header-details border-b-2 border-slate-800 pb-6 text-left space-y-4">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
-                    <h1 className="text-2xl font-bold uppercase tracking-wider text-amber-500 font-serif">Vidhi.AI</h1>
+                    <h1 className="text-2xl font-bold uppercase tracking-wider text-amber-500 font-serif">ConstituAI</h1>
                     <p className="text-[10px] uppercase tracking-widest text-slate-500 font-sans mt-0.5">Indian Constitution Legal Assistant</p>
                   </div>
                   <div className="md:text-right text-xs text-slate-450 font-sans space-y-1">
-                    <p><strong>Ref ID:</strong> VIDHI-2026-{(result.question || 'query').substring(0, 10).toUpperCase().replace(/[^A-Z0-9]/g, '') || 'SCENARIO'}</p>
+                    <p><strong>Ref ID:</strong> CONSTITUAI-2026-{(result.question || 'query').substring(0, 10).toUpperCase().replace(/[^A-Z0-9]/g, '') || 'SCENARIO'}</p>
                     <p><strong>Date:</strong> {new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                     <p><strong>Status:</strong> Validated Legal Assessment</p>
                   </div>

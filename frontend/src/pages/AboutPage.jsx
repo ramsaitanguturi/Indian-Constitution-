@@ -22,7 +22,7 @@ export default function AboutPage() {
           RAG & Multi-Agent Architecture
         </h2>
         <p className="text-xs text-slate-400 font-light">
-          Understanding the semantic indexing and agentic orchestration driving Vidhi.AI.
+          Understanding the semantic indexing and agentic orchestration driving ConstituAI.
         </p>
       </div>
 
@@ -104,7 +104,7 @@ export default function AboutPage() {
         </div>
 
         <p className="text-sm text-slate-350 font-light leading-relaxed">
-          Instead of relying on a single prompt, Vidhi.AI routes queries through a sequence of autonomous agent nodes managed in a stateful LangGraph graph structure:
+          Instead of relying on a single prompt, ConstituAI routes queries through a sequence of autonomous agent nodes managed in a stateful LangGraph graph structure:
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
