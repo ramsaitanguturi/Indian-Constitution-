@@ -1,20 +1,8 @@
-# Vidhi.AI - Constitutional Law Multi-Agent RAG Assistant
+# Vidhi.AI - Constitutional RAG Assistant
 
-Vidhi.AI is a state-of-the-art AI-powered legal assistant designed to systematically analyze real-world scenarios under Indian Constitutional Law. It maps complex legal disputes directly to constitutional articles, relevant clauses, fundamental rights, landmark Supreme Court judgments, and logical verdicts.
+Vidhi.AI is a state-of-the-art, AI-powered legal assistant designed to systematically analyze real-world scenarios under Indian Constitutional Law. It maps complex legal disputes directly to constitutional articles, relevant clauses, fundamental rights, landmark Supreme Court judgments, and structured legal reasoning to generate objective verdicts.
 
 Unlike generic chat assistants, Vidhi.AI is built on an **Agentic RAG workflow** utilizing **LangGraph state orchestration**, **hierarchical parent-child document chunking**, and a dedicated **Validator agent guardrail** to eliminate hallucinations and secure high precision.
-
----
-
-## 🚀 Key Features
-
-* **Hierarchical Parent-Child RAG:** Indexes detail-rich child clauses and key judgment keywords in ChromaDB for high-similarity semantic retrieval, then maps matches back to full parent articles to preserve comprehensive legal context for LLM reasoning.
-* **Hybrid Vector & Keyword Search:** Fuses dense vector search with lexical BM25 matching to retrieve exact constitutional statutes and citations.
-* **Multi-Agent LangGraph Architecture:** Coordinates specialized agents (Router, Constitution, Case Law, Reasoning, Validation, and Verdict) in a stateful execution graph.
-* **Autonomous Validator Guardrails:** An independent validation agent checks generated reasoning against source texts, scoring hallucination risks and calculating confidence.
-* **Real-time Agent Streaming:** Renders live, granular state updates of the active agent workflow timeline on the frontend.
-* **Legal Memorandum Generation:** Features a toggleable "Formal Legal Brief" layout resembling a official legal document, complete with print and PDF export optimization.
-* **Dockerized Production Deployment:** Fully dockerized backend (Uvicorn/FastAPI) and frontend (Vite/React with custom Nginx fallback reverse proxies).
 
 ---
 
@@ -22,133 +10,204 @@ Unlike generic chat assistants, Vidhi.AI is built on an **Agentic RAG workflow**
 
 ```mermaid
 graph TD
-    User([User Query]) -->|1. Submit Scenario| FE[React Frontend]
-    FE -->|2. Stream Stream API| API[FastAPI Gateway]
-    API -->|3. Invoke Graph| LG[LangGraph Orchestrator]
-    
-    LG --> Router{Router Agent}
-    Router -->|If Constitutional Issue| ConstAgent[Constitution Agent]
-    Router -->|If Precedent Needed| CaseAgent[Case Law Agent]
-    
-    ConstAgent -->|Retrieve Parents via Child Match| DB[(ChromaDB Vector Store)]
-    CaseAgent -->|Retrieve Precedents| DB
-    
-    ConstAgent --> ReasonAgent[Reasoning Agent]
-    CaseAgent --> ReasonAgent
-    
-    ReasonAgent -->|Synthesize Brief| ValidAgent[Validator Agent]
-    ValidAgent -->|Evaluate Hallucination Risk| VerdictAgent[Verdict Agent]
-    
-    VerdictAgent -->|Formulate Outcome & Confidence| FE
+    UserQuery([User Query]) --> RouterAgent[Router Agent]
+    RouterAgent --> Retriever[Retriever]
+    Retriever --> HybridSearch[Hybrid Search]
+    HybridSearch --> ReasonAgent[Reasoning Agent]
+    ReasonAgent --> ValidAgent[Validation Agent]
+    ValidAgent --> VerdictAgent[Verdict Agent]
+    VerdictAgent --> FinalAnswer([Final Answer])
+```
+
+The system processes queries through an organized multi-agent pipeline:
+1. **Router Agent:** Analyzes the user's issue, categorizes the legal domain, and decides the query routing workflow.
+2. **Retriever & Hybrid Search:** Query vectors and keywords are searched across ChromaDB (dense vector) and BM25 (sparse lexical) indexes.
+3. **Reasoning Agent:** Integrates retrieved constitutional statutes and landmark Supreme Court precedents to build structured legal arguments.
+4. **Validation Agent:** Acts as an automatic guardrail checking the reasoning against raw sources to calculate hallucination risk.
+5. **Verdict Agent:** Issues a final potential legal outcome with supporting reasons and a confidence score.
+
+---
+
+## 🚀 Features
+
+- **Constitutional Article Retrieval:** Automatically maps legal scenarios to exact constitutional provisions.
+- **Landmark Case Law Retrieval:** References key historical Supreme Court decisions and precedents (e.g., *Puttaswamy*, *Kesavananda Bharati*).
+- **Hybrid Search (Dense + BM25):** Fuses semantic dense vector matching with BM25 keyword matching for maximum precision.
+- **Parent-Child RAG Retrieval:** Indexes granular child clauses/contexts while retrieving full parent articles to preserve comprehensive context.
+- **Multi-Agent Reasoning:** Orchestrates specialized agents (Router, Reasoning, Validation, Verdict) via LangGraph.
+- **Validation Agent Guardrails:** Automatically evaluates generated legal claims against source materials to mitigate LLM hallucinations.
+- **Gemini LLM Integration:** Integrates with the Google Gemini API (`gemini-2.5-flash`) for deep legal reasoning.
+- **Legal Brief Generation UI:** Beautiful, responsive React interface that displays a live agent execution timeline and formats answers as an exportable formal legal brief.
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+- **Python 3.10+** (tested on `3.12.10`)
+- **FastAPI:** High-performance web framework for APIs.
+- **LangGraph & LangChain:** Stateful agent orchestration and LLM integrations.
+- **ChromaDB:** Local vector database.
+- **Sentence Transformers:** Embedding generation (using `all-MiniLM-L6-v2` locally).
+- **Google Gemini API:** Context synthesis and reasoning.
+
+### Frontend
+- **React & Vite:** Fast, modern single-page application framework.
+- **Tailwind CSS:** Premium styling, dark-theme layout, and print-optimized legal memorandum stylesheet.
+
+---
+
+## 📁 Project Structure
+
+```
+Indian-Constitution/
+├── backend/
+│   ├── app/
+│   │   ├── agents/          # Specialized LangGraph agents (Router, Reasoning, Validation, etc.)
+│   │   ├── api/             # FastAPI endpoints (v1 routes, health check)
+│   │   ├── core/            # Configuration and settings
+│   │   ├── db/              # ChromaDB vector store clients and seed checkers
+│   │   ├── prompts/         # Base prompt templates for agents
+│   │   ├── schemas/         # Pydantic models for API requests/responses
+│   │   ├── services/        # Business logic services (Concept classification, etc.)
+│   │   └── main.py          # FastAPI application entry point
+│   ├── data/                # Ingested datasets and local database files
+│   ├── scripts/             # Seeding, ingestion, and agent benchmarking scripts
+│   ├── Dockerfile
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── components/      # UI components (AgentTimeline, LegalBrief, etc.)
+│   │   ├── pages/           # Page layouts (Landing, QueryWorkspace, etc.)
+│   │   ├── services/        # API communication scripts
+│   │   ├── App.jsx          # Root component
+│   │   └── main.jsx         # App entry point
+│   ├── package.json
+│   ├── vite.config.js
+│   └── tailwind.config.js
+├── docs/                    # Centralized project documentation
+│   ├── AGENTS.md
+│   ├── agent_system.md
+│   ├── architecture.md
+│   ├── deployment.md
+│   ├── implementation_plan.md
+│   ├── rag_pipeline.md
+│   ├── README_DOCKER.md
+│   ├── roadmap.md
+│   ├── tech_stack.md
+│   └── testing.md
+├── tests/                   # Core Python testing suites
+│   ├── test_gemini_reasoning.py
+│   ├── test_knowledge_coverage.py
+│   └── test_legal_intelligence.py
+├── database/
+│   └── schema.md            # Metadata and schema definition
+├── docker-compose.yml
+├── .gitignore
+├── .env.example
+└── README.md                # Project entry documentation
 ```
 
 ---
 
-## 📸 Application Interface Screenshots
+## ⚙️ Environment Setup
 
-*Below are placeholders mapping the visual layouts of the production frontend:*
+Before running the application, configure your environment variables. 
 
-* **Landing Page:**
-  * Displays a premium dark-themed hero workspace, description of the Multi-Agent engine, and a list of 10 presets for immediate testing.
-  * `[Placeholder: Landing Page Screenshot - Mockup /public/landing_page.png]`
-* **Query Workspace:**
-  * The central search console showing user query inputs and active backend health checkers.
-  * `[Placeholder: Query Workspace Screenshot - Mockup /public/query_workbench.png]`
-* **Agent Timeline Stream:**
-  * Real-time progress bar detailing state transition events of each active node (e.g. Router active, Researching ChromaDB, Synthesizing reasoning).
-  * `[Placeholder: Active Timeline Stream Screenshot - Mockup /public/agent_timeline.png]`
-* **Legal Answer & Report page:**
-  * Split view between a dashboard metrics panel and a printable serif-styled legal memorandum with a "Print / Save PDF" trigger.
-  * `[Placeholder: Legal Brief Report Screenshot - Mockup /public/legal_brief_report.png]`
-
----
-
-## 📝 Example Demo Evaluation
-
-### User Dispute Input
-> *"Can the police search my personal mobile phone without permission?"*
-
-### Orchestrator Response Lifecycle
-1. **Router Classification:** Flags category as **Privacy & Personal Liberty**.
-2. **Statutory Reference:** Article 21 is retrieved (Right to Life and Personal Liberty).
-3. **Precedent Citation:** *Justice K.S. Puttaswamy v. Union of India (2017)* is retrieved.
-4. **Synthesized Legal Brief:**
-   * **Legal Issue:** Protection of digital privacy under Article 21.
-   * **Applicable Articles:** Article 21 (Right to life and liberty includes the right to privacy).
-   * **Judgments:** *Justice K.S. Puttaswamy (2017)* (established privacy as an intrinsic fundamental right).
-   * **Reasoning:** A search of a private mobile device contains personal data protected under Article 21. Any state wiretapping or physical search must satisfy the three-fold test: (a) legality (existence of law), (b) necessity and proportionality, and (c) a legitimate state objective. Warrantless search without specific statutory emergency criteria violates this test.
-   * **Validation:** Verified (100% citation mapping match; low hallucination risk).
-   * **Possible Verdict:** State seizure or search of a phone without a judicial warrant is unconstitutional and violates Article 21.
-   * **Confidence Level:** High.
-
----
-
-## 🛠️ Technology Stack
-
-* **Frontend:** React 19, Vite, Tailwind CSS (v4 theme configuration), Lucide Icons.
-* **Backend:** FastAPI, Python 3.12, Uvicorn, LangGraph, LangChain Core.
-* **AI Engine:** Google Gemini Pro models (`gemini-1.5-flash` / `gemini-1.5-pro` for deep legal reasoning).
-* **Database:** ChromaDB (persistent vector storage) with Sentence-Transformers embeddings.
-* **Deployment:** Docker & Docker Compose (Production multi-stage compilation).
-
----
-
-## ⚙️ Installation & Setup
-
-### Environment Variables
-Create a `.env` file in the root workspace directory:
-```ini
-# Gemini API Key (Required for LLM synthesis)
+Create a `.env` file inside the `backend` directory (refer to [backend/.env.example](file:///c:/Users/ramsa/Desktop/Indian%20Constitution/backend/.env.example)):
+```env
 GOOGLE_API_KEY=your_gemini_api_key_here
-
-# Embedding Config (Optional, defaults to sentence-transformers locally)
-EMBEDDING_PROVIDER=sentence-transformers
+GEMINI_MODEL=gemini-2.5-flash
+EMBEDDING_PROVIDER=local
+LOCAL_EMBEDDING_MODEL=all-MiniLM-L6-v2
+BACKEND_CORS_ORIGINS=["*"]
 ```
 
-### Local Development Setup
+---
 
-#### 1. Backend Server
+## 🚀 Installation & Running the Project
+
+### 1. Run Backend Natively
+
+Navigate to the `backend` directory, set up your Python virtual environment, install dependencies, and start the development server:
+
 ```bash
 cd backend
 python -m venv venv
-# Windows powershell:
+
+# Activate Environment:
+# On Windows (PowerShell):
 .\venv\Scripts\Activate.ps1
-# Mac/Linux:
+# On Linux/macOS:
 source venv/bin/activate
 
+# Install dependencies:
 pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.5 --port 8000 --reload
-```
 
-#### 2. Frontend Development
+# Ingest and Seed Database (Run once):
+python scripts/ingest_data.py
+
+# Start FastAPI:
+uvicorn app.main:app --reload
+```
+The backend API will run locally on `http://localhost:8000`. You can inspect the Swagger interactive UI at `http://localhost:8000/docs`.
+
+### 2. Run Frontend Natively
+
+Open a new terminal, navigate to the `frontend` directory, install Node packages, and start Vite:
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-Open `http://localhost:5173` to explore the workbench.
+The frontend web application will run locally on `http://localhost:5173`.
 
 ---
 
-### Docker Deployment Setup
-To build the images and run backend and frontend containers concurrently:
-```bash
-docker compose up -d --build
-```
-* **Frontend Web App:** Available on Port `80` (or proxy configured port).
-* **Backend API Swagger:** Available on `http://localhost:8000/docs`.
+## 📝 Demo Query Examples
 
-To tear down services:
-```bash
-docker compose down -v
-```
+Try pasting these example scenarios into the web application to see Vidhi.AI's reasoning in action:
+
+- **Privacy & Arrest:** *"Can the police search my personal mobile phone without a warrant during a routine check?"*
+- **Freedom of Expression:** *"Can the government ban a peaceful student assembly protesting against a new local policy?"*
+- **Religious Freedoms:** *"Can a state government restrict dress codes in state-funded schools under religious claims?"*
+- **Off-topic Guardrail:** *"How do I bake a chocolate cake at home?"* (Asserts off-topic filtering and validation rejection)
 
 ---
 
-## 🗺️ Future Roadmap
+## 🧪 Testing
 
-- [ ] **Judgment Database Expansion:** Increase indexing from 200+ cases to 10,000+ Supreme Court and High Court verdicts.
-- [ ] **Multilingual Legal Support:** Enable query submission and document outputs in regional Indian languages (Hindi, Tamil, Marathi, etc.).
-- [ ] **Voice Interface:** Integrate speech-to-text input to allow verbal scenario descriptions and vocal summaries.
-- [ ] **Comparative Constitutional Mapping:** Connect rights queries to international constitutional provisions (e.g. US Bill of Rights, South African Constitution).
-- [ ] **User Case Accounts:** Allow lawyers and researchers to log in, save briefs, and generate collaborative case folders.
+The repository includes a comprehensive verification suite located in the `tests/` directory:
+
+- **RAG & Coverage Benchmark (50 Cases):** Evaluates system retrieval accuracy over 50 real-world scenarios across 13 domains.
+  ```bash
+  python tests/test_knowledge_coverage.py
+  ```
+- **Agent Integration Test:** Compares Multi-Agent output results using Gemini augmentation against static rules.
+  ```bash
+  python tests/test_gemini_reasoning.py
+  ```
+- **Legal Concept Parsing Test:** Verifies query parsing, keyword extraction, and concept mapping.
+  ```bash
+  python tests/test_legal_intelligence.py
+  ```
+- **Frontend Validation:** Build compilation check to confirm bundle health.
+  ```bash
+  cd frontend && npm run build
+  ```
+
+---
+
+## 🔮 Future Improvements
+
+- **Larger Legal Database:** Indexing 10,000+ Supreme Court and High Court full-text judgments.
+- **Multilingual Support:** Support queries and generated legal briefs in major Indian languages (Hindi, Bengali, Tamil, etc.).
+- **Voice Interface:** Voice-to-text querying and read-aloud spoken summaries of legal briefs.
+- **Citation Verification:** Deep linking each retrieved case directly to official Indian Kanoon or Supreme Court portal documents.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.

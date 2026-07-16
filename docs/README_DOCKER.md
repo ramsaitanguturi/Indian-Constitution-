@@ -1,6 +1,6 @@
-# Vidhi.AI - Production Deployment Guide
+# Vidhi.AI - Local Docker Orchestration Guide (Optional)
 
-This document describes how to build, run, and verify the production multi-agent Constitution RAG assistant (**Vidhi.AI**) using Docker and Docker Compose.
+This document describes how to build, run, and verify the local containerized stack of the multi-agent Constitution RAG assistant (**Vidhi.AI**) using Docker and Docker Compose.
 
 ---
 
@@ -14,7 +14,7 @@ Ensure you have the following installed on your host system:
 
 ## Environment Setup
 
-The backend service requires model credentials to run. Create a `.env` file in the root workspace directory (or configure them in your terminal) containing:
+The backend service requires model credentials to run. Create a `.env` file in the root workspace directory containing:
 
 ```ini
 # Google API Key for Gemini LLM
@@ -26,10 +26,10 @@ OPENAI_API_KEY=your_openai_api_key_here
 
 ---
 
-## Deployment Steps
+## Container Setup Steps
 
 ### 1. Build and Start Services
-To build the images and start the backend and frontend containers, execute the following command in the root directory:
+To build the local Docker images and start backend and frontend containers, execute:
 
 ```bash
 docker compose up -d --build
@@ -49,7 +49,7 @@ docker compose ps
 
 ---
 
-## Verifying the Deployment API
+## Verifying the Local API
 
 You can verify that the system is fully operational by calling the backend endpoints directly:
 
@@ -57,13 +57,6 @@ You can verify that the system is fully operational by calling the backend endpo
 Check the status of the server and the live ChromaDB connection:
 ```bash
 curl http://localhost:8000/health
-```
-**Expected Response:**
-```json
-{
-  "status": "healthy",
-  "database": "ChromaDB connection successful. Parent articles index count: 395"
-}
 ```
 
 ### 2. System Information

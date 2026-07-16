@@ -1,4 +1,5 @@
 # Python
+venv/
 backend/venv/
 __pycache__/
 *.py[cod]
@@ -23,6 +24,7 @@ backend/data/chroma/
 
 
 # Node
+node_modules/
 frontend/node_modules/
 frontend/dist/
 

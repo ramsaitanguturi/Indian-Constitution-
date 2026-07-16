@@ -78,9 +78,9 @@ Once running, you can access:
 * **Health Check Endpoint:** `http://localhost:8000/health`
 * **Search Endpoint:** `POST http://localhost:8000/api/v1/chat/search`
 
-## Production & Render Deployment
+## Memory Optimizations & Model Tuning (Optional)
 
-This backend is optimized for constrained memory environments like Render Free tier (512MB RAM):
+This backend is optimized for constrained memory environments and resource-limited local systems:
 
 ### 1. Memory Optimization Features
 - **Lazy Loading**: The heavy `SentenceTransformer` model weights are NOT loaded during server startup or container probes (e.g. `/health`). They are only loaded on the first query request.
